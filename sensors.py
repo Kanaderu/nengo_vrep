@@ -1,6 +1,8 @@
 import vrep
 import ctypes
 import numpy as np
+from PIL import Image
+import array
 
 vrep_mode = vrep.simx_opmode_oneshot
 
@@ -126,3 +128,26 @@ def dvs(cid, handle=None, signal_name="dataFromThisTimestep",
       #image[127-y_coord][127-x_coord] = magnitude
 
     return image.ravel()
+
+
+def rgb_vision(cid, handle, height=32, width=32, grayscale=True):
+
+    bit = 1 if grayscale else 0
+    err, res, image = vrep.simxGetVisionSensorImage(cid, handle, bit, vrep_mode)
+    
+    if grayscale:
+        if err == vrep.simx_return_ok:
+            image = np.flipud(np.reshape(image, (height, width))).ravel()
+            return np.array(image) / 255.
+        else:
+            # Return zeroes if nothing is in the input buffer
+            return np.zeros(height * width)
+    else:
+        if err == vrep.simx_return_ok:
+            image = np.array(image, dtype=np.uint8)
+            image.resize([res[1], res[0], 3])
+            image = np.moveaxis(np.flipud(image), 2, 0).ravel()
+            return image / 255.        
+        else:
+            # Return zeroes if nothing is in the input buffer
+            return np.zeros(height * width * 3)
