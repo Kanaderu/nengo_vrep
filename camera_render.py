@@ -21,7 +21,7 @@ robot = CustomRobot(sim_dt=0.05, nengo_dt=0.001, sync=True)
 # These names can be found in the Scene Hierarchy pane
 
 robot.add_sensor('Vision_sensor',
-                partial(sensors.rgb_vision, width=32, height=32, byte='color'), dim=32*32*3)
+                partial(sensors.rgb_vision, width=32, height=32, grayscale=False), dim=32*32*3)
 robot.add_actuator("Revolute_joint", actuators.joint_velocity)
 
 model.config[nengo.Ensemble].neuron_type=nengo.LIF()

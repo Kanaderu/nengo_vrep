@@ -123,7 +123,7 @@ def dvs(cid, handle=None, signal_name="dataFromThisTimestep",
       # Distinguish between different polarities
       #image[127-y_coord][127-x_coord] = polarity * magnitude
       image[dim_y-1-y_coord][dim_x-1-x_coord] = polarity * magnitude
-      
+
       # No Distinction between different polarities
       #image[127-y_coord][127-x_coord] = magnitude
 
@@ -134,7 +134,7 @@ def rgb_vision(cid, handle, height=32, width=32, grayscale=True):
 
     bit = 1 if grayscale else 0
     err, res, image = vrep.simxGetVisionSensorImage(cid, handle, bit, vrep_mode)
-    
+
     if grayscale:
         if err == vrep.simx_return_ok:
             image = np.flipud(np.reshape(image, (height, width))).ravel()
